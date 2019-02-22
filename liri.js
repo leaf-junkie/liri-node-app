@@ -4,7 +4,7 @@ require("dotenv").config();
 
 import keys from "./keys.js";
 
-var spotify = new Spotify(keys.spotify);
+const spotify = new Spotify(keys.spotify);
 
 // user input variables
 const liri_command = process.argv[2];
@@ -12,42 +12,63 @@ const liri_search = process.argv[3];
 console.log("LIRI command: " + liri_command);
 console.log("LIRI search: " + liri_search);
 
+
 // LIRI functions
 
 // 1. concert-this
-// This will search the Bands in Town Artist Events API 
-// ("https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp") 
-// for an artist and render the following information about each event to the terminal:
-//      Name of the venue
-//      Venue location
-//      Date of the Event (use moment to format this as "MM/DD/YYYY")
-
+// Search the Bands in Town Artist Events API for an artist and render venue name, location, and date for each event
 function liriConcertThis() {
+    // Grab the axios package
+    const axios = require("axios");
     
+    // Run the axios.get function (this is like making an ajax call)
+    axios
+        .get("https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp")
+        .then(function(response) {
+            // If axios was successful, log body from site
+            console.log(response.data);
+        })
+        .catch(function(error) {
+            if (error.response) {
+                console.log(error.response.data);
+                console.log(error.response.status);
+                console.log(error.response.headers);
+            } else if (error.request) {
+                console.log(error.request);
+            } else {
+                console.log("Error:", error.message);
+            }
+            console.log(error.config);
+        });
+
+    // Name of the venue
+
+    // Venue location
+
+    // Date of the Event (use moment to format this as "MM/DD/YYYY")
+    // Use moment.js to format the date
 }
 
 // 2. spotify-this-song
 // This will show the following info about the song in your terminal/bash window
-//      Artist(s)
-//      The song's name
-//      A preview link of the song from Spotify
-//      The album that the song is from
 function liriSpotifyThisSong() {
-
+    // Artist(s)
+    // The song's name
+    // A preview link of the song from Spotify
+    // The album that the song is from
 }
 
 // 3. movie-this
 // This will show the following info in your terminal/bash window:
-//      Title of the movie.
-//      Year the movie came out.
-//      IMDB Rating of the movie.
-//      Rotten Tomatoes Rating of the movie.
-//      Country where the movie was produced.
-//      Language of the movie.
-//      Plot of the movie.
-//      Actors in the movie.
 function liriMovieThis() {
-
+    // Title of the movie.
+    // Year the movie came out.
+    // IMDB Rating of the movie.
+    // Rotten Tomatoes Rating of the movie.
+    // Country where the movie was produced.
+    // Language of the movie.
+    // Plot of the movie.
+    // Actors in the movie.
 }
 
 // 4. do-what-it-says
@@ -56,3 +77,8 @@ function liriMovieThis() {
 function liriDoWhatItSays() {
 
 }
+
+// Switch statement
+
+
+module.exports
