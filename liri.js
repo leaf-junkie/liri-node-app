@@ -1,7 +1,8 @@
 // Require statement and variables
 
 require("dotenv").config();
-
+// import * as dotenv from "dotensv";
+// dotenv.config()
 import keys from "./keys.js";
 
 const spotify = new Spotify(keys.spotify);
@@ -41,34 +42,73 @@ function liriConcertThis() {
             console.log(error.config);
         });
 
-    // Name of the venue
+    // a. Name of the venue
+    const venueName = artist[i].venue.name;
+    console.log(`Venue: ${venueName}`);
 
-    // Venue location
+    // b. Venue location
+    const venueCity = artist[i].venue.city;
+    const venueState = artist[i].venue.region;
+    console.log(`Location: ${venueCity}, ${venueState}`);
 
-    // Date of the Event (use moment to format this as "MM/DD/YYYY")
-    // Use moment.js to format the date
+    // c. Date of the Event (use moment to format this as "MM/DD/YYYY")
+    const eventDate = artist[i].datetime;
+    // TODO: Use moment.js to format the date
+
 }
 
 // 2. spotify-this-song
+// TODO: Unsure if axios is necessary - need to use keys.js for the API string!!
 // This will show the following info about the song in your terminal/bash window
 function liriSpotifyThisSong() {
-    // Artist(s)
-    // The song's name
-    // A preview link of the song from Spotify
-    // The album that the song is from
+    const axios = require("axios");
+    axios
+        .get("")
+        .then(function(response) {
+            console.log(response.data);
+        })
+        .catch(function(error) {
+            if (error.response) {
+                console.log(error.response.data);
+                console.log(error.response.status);
+                console.log(error.response.headers);
+            } else if (error.request) {
+                console.log(error.request);
+            } else {
+                console.log("Error:", error.message);
+            }
+            console.log(error.config);
+        });
+
+    // a. Artist(s)
+
+    // b. The song's name
+
+    // c. A preview link of the song from Spotify
+
+    // d. The album that the song is from
+
 }
 
 // 3. movie-this
 // This will show the following info in your terminal/bash window:
 function liriMovieThis() {
-    // Title of the movie.
-    // Year the movie came out.
-    // IMDB Rating of the movie.
-    // Rotten Tomatoes Rating of the movie.
-    // Country where the movie was produced.
-    // Language of the movie.
-    // Plot of the movie.
-    // Actors in the movie.
+    // Title of the movie
+
+    // Year the movie came out
+
+    // IMDB Rating of the movie
+
+    // Rotten Tomatoes Rating of the movie
+
+    // Country where the movie was produced
+
+    // Language of the movie
+
+    // Plot of the movie
+
+    // Actors in the movie
+
 }
 
 // 4. do-what-it-says
