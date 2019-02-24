@@ -43,19 +43,20 @@ function concertThis() {
             console.log(error.config);
         });
 
+    // TODO: Clean up code, especially console logs
     // a. Name of the venue
-    const venueName = artist[i].venue.name;
+    const venueName = artist.venue.name;
     console.log(`Venue: ${venueName}`);
 
     // b. Venue location
-    const venueCity = artist[i].venue.city;
-    const venueState = artist[i].venue.region;
+    const venueCity = artist.venue.city;
+    const venueState = artist.venue.region;
     console.log(`Location: ${venueCity}, ${venueState}`);
 
     // c. Date of the Event (use moment to format this as "MM/DD/YYYY")
-    const eventDate = artist[i].datetime;
+    const eventDate = artist.datetime;
+    console.log(`Date: ${date}`);
     // TODO: Use moment.js to format the date
-
 }
 concertThis();
 
