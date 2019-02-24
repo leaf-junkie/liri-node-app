@@ -4,6 +4,7 @@ require("dotenv").config();
 // import * as dotenv from "dotensv";
 // dotenv.config()
 import keys from "./keys.js";
+import { readFile } from "fs";
 
 const spotify = new Spotify(keys.spotify);
 
@@ -18,7 +19,7 @@ console.log("LIRI search: " + liri_search);
 
 // 1. concert-this
 // Search the Bands in Town Artist Events API for an artist and render venue name, location, and date for each event
-function liriConcertThis() {
+function concertThis() {
     // Grab the axios package
     const axios = require("axios");
     
@@ -56,11 +57,12 @@ function liriConcertThis() {
     // TODO: Use moment.js to format the date
 
 }
+concertThis();
 
 // 2. spotify-this-song
 // TODO: Unsure if axios is necessary - need to use keys.js for the API string!!
 // This will show the following info about the song in your terminal/bash window
-function liriSpotifyThisSong() {
+function spotifyThisSong() {
     const axios = require("axios");
     axios
         .get("")
@@ -89,34 +91,52 @@ function liriSpotifyThisSong() {
     // d. The album that the song is from
 
 }
+spotifyThisSong();
 
 // 3. movie-this
 // This will show the following info in your terminal/bash window:
-function liriMovieThis() {
-    // Title of the movie
+function movieThis() {
+    const URL = ; // TODO: Add URL
+    axios.get(URL).then(function(response) {
 
-    // Year the movie came out
-
-    // IMDB Rating of the movie
-
-    // Rotten Tomatoes Rating of the movie
-
-    // Country where the movie was produced
-
-    // Language of the movie
-
-    // Plot of the movie
-
-    // Actors in the movie
-
+        const movieData = response.data[].; // TODO: Look up API JSON structure
+        
+        // TODO: Fill in information
+        const movieObject = [
+            // Title of the movie
+            `Title: ${}`,
+            // Year the movie came out
+            `Year Released: ${}`,
+            // IMDB Rating of the movie
+            `IMDB Rating: ${}`,
+            // Rotten Tomatoes Rating of the movie
+            `Rotten Tomatoes Rating: ${}`,
+            // Country where the movie was produced
+            `Country Produced: ${}`,
+            // Language of the movie
+            `Language: ${}`,
+            // Plot of the movie
+            `Plot: ${}`,
+            // Actors in the movie
+            `Actors: ${}`
+    ];
+    
+    fs.appendFile("log.txt", movieData + divider, (err) => {
+        if (err) throw err;
+    });
+    console.log(movieObject);
+})
 }
+movieThis()
 
 // 4. do-what-it-says
-// Using the fs Node package, LIRI will take the text inside of random.txt
-// and then use it to call one of LIRI's commands.
-function liriDoWhatItSays() {
-
+function doWhatItSays() {
+    fs.readFile("random.txt", (err) => {
+        if (err) throw err;
+    });
+    // console.log(`Now playing ${song} by ${artist}`);
 }
+doWhatItSays();
 
 // Switch statement
 
