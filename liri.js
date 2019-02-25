@@ -13,7 +13,7 @@ const divider = "\n\n....................\n\n"
 // user input variables
 const command = process.argv[2];
 let search = process.argv.slice(3).join("+");
-console.log(search);
+console.log(`\nYou searched for: ${search}\n`);
 
 // Switch statement
 switch (command) {
@@ -46,17 +46,18 @@ async function concert() {
         `Lineup: ${lineup.join(", ")}`,
         `Venue: ${venue}`,
         `Location: ${city}, ${state}`,
-        `Date: ${date}`
+        `Date: ${date}`,
+        `${divider}`
     ];
 
     if(!search) {
         search = "Weezer";
         console.log("Showing results for Weezer");
     }
-    console.log(divider + concertData.join("\n") + divider);
+    console.log(concertData.join("\n"));
 }
 
-// 2. spotify-this-song
+// 2. spotify-this
 function song() {
     console.log('hello');
     spotify.search({
@@ -75,9 +76,10 @@ function song() {
                     `Song: ${results.name}`,
                     `Artist: ${results.artists[0].name}`,
                     `Album: ${results.album.name}`,
-                    `Preview: ${results.preview_url}`
+                    `Preview: ${results.preview_url}`,
+                    `${divider}`
                 ];
-                console.log(divider + songData.join("\n") + divider);
+                console.log(songData.join("\n"));
             }
         }
     });
@@ -100,7 +102,7 @@ async function movie() {
         `Actors: ${result.Actors}`,
         `Plot: ${result.Plot}`,
     ];
-    const displayString = divider + movieData.join("\n") + divider;
+    const displayString = movieData.join("\n") + divider;
     fs.appendFile("log.txt", displayString, (err) => {
             console.log(displayString);
     });
@@ -110,7 +112,7 @@ async function movie() {
 function doWhatItSays() {
     const data = fs.readFileSync("random.txt").toString();
     if(data) {
-        console.log(divider + data + divider);
+        console.log(data + divider);
     }
 }
 
