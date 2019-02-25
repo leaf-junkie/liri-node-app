@@ -1,4 +1,5 @@
 // Require statements and variables
+const util = require('util');
 require("dotenv").config();
 const Spotify = require("node-spotify-api");
 const keys = require("./keys.js"); 
@@ -7,6 +8,7 @@ const axios = require("axios");
 const fs = require("fs");
 const moment = require("moment");
 moment().format();
+const divider = "\n\n....................\n\n"
 
 // user input variables
 const command = process.argv[2];
@@ -31,40 +33,30 @@ switch (command) {
 };
 
 // 1. concert-this
-function concertThis(artist) {
-    axios
-        .get("https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp")
-        .then(function(response) {
-            console.log(response.data);
-        })
-        .catch(function(error) {
-            if (error.response) {
-                console.log(error.response.data);
-                console.log(error.response.status);
-                console.log(error.response.headers);
-            } else if (error.request) {
-                console.log(error.request);
-            } else {
-                console.log("Error:", error.message);
-            }
-            console.log(error.config);
-        });
+async function concertThis(search) {
+    const response = await axios.get("https://rest.bandsintown.com/" + search + "/weezer/events?app_id=codingbootcamp")
+    const result = response.data;
+    console.log(`Response: ${util.inspect(result)}`);
 
-    const artistName = artist.lineup[0];
-    const venueName = artist.venue.name;
-    const venueCity = artist.venue.city;
-    const venueState = artist.venue.region;
-    const eventDate = artist.datetime;
+    const artistName = result.lineup;
+    const venue = result.venue.name;
+    const city = result.venue.city;
+    const state = result.venue.region;
+    const date = result.datetime;
     // TODO: Use moment.js to format the date ("MM/DD/YYYY")
-    
+
     const concertData = [
-        `\n\n....................\n\n`,
         `Artist: ${artistName}`
-        `Venue: ${venueName}`
-        `Location: ${venueCity}, ${venueState}`
-        `Date: ${eventDate}`
+        `Venue: ${venue}`
+        `Location: ${city}, ${state}`
+        `Date: ${date}`
     ];
-    console.log(concertData);
+
+    if(err) {
+        console.log(`Error: ${err}`);
+    } else {
+        console.log(divider + concertData + divider);
+    }
 }
 
 // 2. spotify-this-song
@@ -88,7 +80,8 @@ function spotifyThisSong(search) {
                     `Song Name: ${results.name}`,
                     `Artist: ${results.artists[0].name}`,
                     `Album: ${results.album.name}`,
-                    `Preview: ${results.preview_url}`
+                    `Preview: ${results.preview_url}`,
+                    `\n\n....................\n\n`
                 ];
                 console.log(songData);
             }
@@ -96,14 +89,13 @@ function spotifyThisSong(search) {
     });
 }
 
+// TODO: Format printed movieData
 // 3. movie-this
 function movieThis() {
     axios
         .get("http://www.omdbapi.com/?t=" + search + "&apikey=3bcc87a3")
         .then(function(response) {
         const result = response.data;
-        const divider = "\n\n....................\n\n";
-        console.log(result);
         const movieData = [
             `Title: ${result.Title}`,
             `Year Released: ${result.Year}`,
@@ -113,23 +105,48 @@ function movieThis() {
             `Language: ${result.Language}`,
             `Plot: ${result.Plot}`,
             `Actors: ${result.Actors}`,
-            `\n\n....................\n\n`
     ];
     
-    fs.appendFile("log.txt", result + divider, (err) => {
+    fs.appendFile("log.txt", movieData, (err) => {
         if (err) throw err;
     });
 
-    console.log(movieData);
+    console.log(divider + movieData + divider);
 })
 }
 
+// async function movieThis() {
+//     const response = await axios.get("http://www.omdbapi.com/?t=" + search + "&apikey=3bcc87a3");
+//     const result = response.data;
+//     const movieData = [
+//         `Title: ${result.Title}`,
+//         `Year Released: ${result.Year}`,
+//         `IMDB Rating: ${result.Ratings[0].Value}`,
+//         `Rotten Tomatoes Rating: ${result.Ratings[1].Value}`,
+//         `Country Produced: ${result.Country}`,
+//         `Language: ${result.Language}`,
+//         `Plot: ${result.Plot}`,
+//         `Actors: ${result.Actors}`,
+//     ];
+
+//     fs.appendFile("log.txt", movieData, (err) => {
+//         if (err) throw err;
+//     });
+
+//     console.log(divider + movieData + divider);
+// }
+
+
 // 4. do-what-it-says
 function doWhatItSays() {
-    fs.readFile("random.txt", (err) => {
-        if (err) throw err;
-    });
-    // console.log(`Now playing ${song} by ${artist}`);
+    const data = fs.readFileSync("random.txt").toString();
+    if(data) {
+        console.log(
+            `\n\n....................\n\n`,
+            `${data}`,
+            `\n\n....................\n\n`
+        );
+    }
 }
 
 module.exports
