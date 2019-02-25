@@ -1,28 +1,41 @@
-// Require statement and variables
+// Require statements and variables
 require("dotenv").config();
+const Spotify = require("node-spotify-api");
+const keys = require("./keys.js"); 
+const spotify = new Spotify(keys.spotify);
 const axios = require("axios");
 const fs = require("fs");
-const keys = require("./keys.js"); 
 const moment = require("moment");
 moment().format();
-const Spotify = require("node-spotify-api");
-const spotify = new Spotify(keys.spotify);
 
 // user input variables
 const command = process.argv[2];
 const search = process.argv.slice(3).join("");
-console.log("LIRI command: " + liri_command);
-console.log("LIRI search: " + liri_search);
+console.log(`LIRI command: ${command}`);
+console.log(`LIRI search: ${search}`);
 
-// LIRI functions
+// Switch statement
+switch (command) {
+    case "concert-this":
+        concertThis();
+        break;
+    case "spotify-this":
+        spotifyThisSong();
+        break;
+    case "movie-this":
+        movieThis();
+        break;
+    case "do-what-it-says":
+        doWhatItSays();
+        break;
+    // default:
+};
 
 // 1. concert-this
-// Search the Bands in Town Artist Events API for an artist and render venue name, location, and date for each event
-function concertThis() {
+function concertThis(artist) {
     axios
         .get("https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp")
         .then(function(response) {
-            // If axios was successful, log body from site
             console.log(response.data);
         })
         .catch(function(error) {
@@ -38,22 +51,25 @@ function concertThis() {
             console.log(error.config);
         });
 
-    // TODO: Clean up code, especially console logs
     const artistName = artist.lineup[0];
     const venueName = artist.venue.name;
     const venueCity = artist.venue.city;
     const venueState = artist.venue.region;
     const eventDate = artist.datetime;
-    
-    console.log(`Artist: ${artistName}`);
-    console.log(`Venue: ${venueName}`);
-    console.log(`Location: ${venueCity}, ${venueState}`);
-    console.log(`Date: ${eventDate}`);
     // TODO: Use moment.js to format the date ("MM/DD/YYYY")
+    
+    const concertData = [
+        `\n\n....................\n\n`,
+        `Artist: ${artistName}`
+        `Venue: ${venueName}`
+        `Location: ${venueCity}, ${venueState}`
+        `Date: ${eventDate}`
+    ];
+    console.log(concertData);
 }
 
 // 2. spotify-this-song
-function spotifyThisSong() {
+function spotifyThisSong(search) {
     if(!search) {
         search = "heimdalsgate like a promethean curse";
         console.log("Showing results for Heimdalsgate Like a Promethean Curse by of Montreal");
@@ -66,67 +82,42 @@ function spotifyThisSong() {
         if(err) {
             console.log(`Oops, we encountered an error: ${err}`);
         } else {
-            
+            for(a = 0; a < limit.length; a++) {
+                const results = data.tracks.items[a];
+                const songData = [
+                    `\n\n....................\n\n`,
+                    `Song Name: ${results.name}`,
+                    `Artist: ${results.artists[0].name}`,
+                    `Album: ${results.album.name}`,
+                    `Preview: ${results.preview_url}`
+                ];
+                console.log(songData);
+            }
         }
-    })
-    
-    .catch(function(error) {
-        if (error.response) {
-            console.log(error.response.data);
-            console.log(error.response.status);
-            console.log(error.response.headers);
-        } else if (error.request) {
-            console.log(error.request);
-        } else {
-            console.log("Error:", error.message);
-        }
-        console.log(error.config);
-        });
-
-    // TODO: chec Sportify API JSON structure
-    // a. Artist(s)
-
-    // b. The song's name
-
-    // c. A preview link of the song from Spotify
-
-    // d. The album that the song is from
-
+    });
 }
 
 // 3. movie-this
-// This will show the following info in your terminal/bash window:
 function movieThis() {
-    const search = process.argv.slice(3).join(""); // TODO: variable name
-
-    const URL = "" + search; // TODO: Add URL
-    axios.get(URL).then(function(response) {
-
-        const movieData = response.data[].; // TODO: Look up API JSON structure
-        
-        // TODO: Fill in information
+    axios
+        .get("http://www.omdbapi.com/?t=" + search + "&apikey=3bcc87a3")
+        .then(function(response) {
+        const result = response.data;
         const movieObject = [
-            // Title of the movie
-            `Title: ${}`,
-            // Year the movie came out
-            `Year Released: ${}`,
-            // IMDB Rating of the movie
-            `IMDB Rating: ${}`,
-            // Rotten Tomatoes Rating of the movie
-            `Rotten Tomatoes Rating: ${}`,
-            // Country where the movie was produced
-            `Country Produced: ${}`,
-            // Language of the movie
-            `Language: ${}`,
-            // Plot of the movie
-            `Plot: ${}`,
-            // Actors in the movie
-            `Actors: ${}`
+            `Title: ${result.title}`,
+            `Year Released: ${result.year}`,
+            `IMDB Rating: ${result.ratings[0].value}`,
+            `Rotten Tomatoes Rating: ${result.ratings[1].value}`,
+            `Country Produced: ${result.country}`,
+            `Language: ${result.language}`,
+            `Plot: ${result.plot}`,
+            `Actors: ${result.actors}`
     ];
     
-    fs.appendFile("log.txt", movieData + divider, (err) => {
+    fs.appendFile("log.txt", result + divider, (err) => {
         if (err) throw err;
     });
+
     console.log(movieObject);
 })
 }
@@ -138,21 +129,5 @@ function doWhatItSays() {
     });
     // console.log(`Now playing ${song} by ${artist}`);
 }
-
-// Switch statement
-switch (function) {
-    case "":
-        console.log();
-        break;
-    case "":
-        console.log();
-        break;
-    case "":
-        console.log();
-        break;
-    case "":
-        console.log();
-        break;
-};
 
 module.exports
