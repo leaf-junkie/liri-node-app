@@ -10,7 +10,7 @@ const moment = require("moment");
 moment().format();
 const divider = "\n\n....................\n\n"
 
-// user input variables
+// User input variables
 const command = process.argv[2];
 let search = process.argv.slice(3).join("+");
 console.log(`\nYou searched for: ${search}\n`);
@@ -26,12 +26,12 @@ switch (command) {
     case "movie-this":
         movie();
         break;
-    case "do-what-it-says":
-        doWhatItSays();
+    case "do-something":
+        doSomething();
         break;
 };
 
-// 1. concert-this
+// FUNCTION: concert-this
 async function concert() {
     const URL = "https://rest.bandsintown.com/artists/" + search + "/events?app_id=codingbootcamp";
     const response = await axios.get(URL);
@@ -57,15 +57,13 @@ async function concert() {
     console.log(concertData.join("\n"));
 }
 
-// 2. spotify-this
+// FUNCTION: spotify-this
 function song() {
-    console.log('hello');
     spotify.search({
         type: "track",
         query: search,
         limit: 5
     }, function(err, data) {
-        console.log(data)
         if(!search) {
             search = "heimdalsgate like a promethean curse";
             console.log("Showing results for Heimdalsgate Like a Promethean Curse by of Montreal");
@@ -85,7 +83,7 @@ function song() {
     });
 }
 
-// 3. movie-this
+// FUNCTION: movie-this
 async function movie() {
     if (!search) {
         search = "Donnie+Darko";
@@ -108,8 +106,8 @@ async function movie() {
     });
 }
 
-// 4. do-what-it-says
-function doWhatItSays() {
+// FUNCTION: do-something
+function doSomething() {
     const data = fs.readFileSync("random.txt").toString();
     if(data) {
         console.log(data + divider);
