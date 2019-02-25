@@ -1,9 +1,9 @@
-##LIRI
-####Language Interpretation and Recognition Interface 
+## LIRI
+#### Language Interpretation and Recognition Interface 
 
 **LIRI** is a command line node app that takes in parameters (a command and something to search) and returns with data that is displayed in the terminal.
 
-###Commands
+### Commands
 The user can enter the following commands:
 
 `<concert-this>`

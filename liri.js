@@ -10,9 +10,8 @@ moment().format();
 
 // user input variables
 const command = process.argv[2];
-const search = process.argv.slice(3).join("");
-console.log(`LIRI command: ${command}`);
-console.log(`LIRI search: ${search}`);
+const search = process.argv.slice(3).join("+");
+console.log(search);
 
 // Switch statement
 switch (command) {
@@ -103,22 +102,25 @@ function movieThis() {
         .get("http://www.omdbapi.com/?t=" + search + "&apikey=3bcc87a3")
         .then(function(response) {
         const result = response.data;
-        const movieObject = [
-            `Title: ${result.title}`,
-            `Year Released: ${result.year}`,
-            `IMDB Rating: ${result.ratings[0].value}`,
-            `Rotten Tomatoes Rating: ${result.ratings[1].value}`,
-            `Country Produced: ${result.country}`,
-            `Language: ${result.language}`,
-            `Plot: ${result.plot}`,
-            `Actors: ${result.actors}`
+        const divider = "\n\n....................\n\n";
+        console.log(result);
+        const movieData = [
+            `Title: ${result.Title}`,
+            `Year Released: ${result.Year}`,
+            `IMDB Rating: ${result.Ratings[0].Value}`,
+            `Rotten Tomatoes Rating: ${result.Ratings[1].Value}`,
+            `Country Produced: ${result.Country}`,
+            `Language: ${result.Language}`,
+            `Plot: ${result.Plot}`,
+            `Actors: ${result.Actors}`,
+            `\n\n....................\n\n`
     ];
     
     fs.appendFile("log.txt", result + divider, (err) => {
         if (err) throw err;
     });
 
-    console.log(movieObject);
+    console.log(movieData);
 })
 }
 
