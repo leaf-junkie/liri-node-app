@@ -18,13 +18,13 @@ console.log(search);
 // Switch statement
 switch (command) {
     case "concert-this":
-        concertThis();
+        concert();
         break;
     case "spotify-this":
-        spotifyThisSong();
+        song();
         break;
     case "movie-this":
-        movieThis();
+        movie();
         break;
     case "do-what-it-says":
         doWhatItSays();
@@ -33,12 +33,16 @@ switch (command) {
 };
 
 // 1. concert-this
-async function concertThis(search) {
-    const response = await axios.get("https://rest.bandsintown.com/" + search + "/weezer/events?app_id=codingbootcamp")
-    const result = response.data;
-    console.log(`Response: ${util.inspect(result)}`);
+async function concert() {
+    const URL = "https://rest.bandsintown.com/artists/" + search + "/events?app_id=codingbootcamp";
+    // console.log(URL);
+    const response = await axios.get(URL);
+    const result = response.data[0];
+    // console.log(result.length);
+    // console.log(`Response: ${util.inspect(result)}`);
 
-    const artistName = result.lineup;
+    const lineup = result.lineup;
+    console.log(lineup.join(", "));
     const venue = result.venue.name;
     const city = result.venue.city;
     const state = result.venue.region;
@@ -46,30 +50,31 @@ async function concertThis(search) {
     // TODO: Use moment.js to format the date ("MM/DD/YYYY")
 
     const concertData = [
-        `Artist: ${artistName}`
-        `Venue: ${venue}`
-        `Location: ${city}, ${state}`
+        `Lineup: ${lineup.join(", ")}`,
+        `Venue: ${venue}`,
+        `Location: ${city}, ${state}`,
         `Date: ${date}`
     ];
 
-    if(err) {
-        console.log(`Error: ${err}`);
-    } else {
-        console.log(divider + concertData + divider);
+    if(!search) {
+        search = "Weezer";
+        console.log("Showing results for Weezer");
     }
+    console.log(divider + concertData.join("\n") + divider);
 }
 
 // 2. spotify-this-song
-function spotifyThisSong(search) {
-    if(!search) {
-        search = "heimdalsgate like a promethean curse";
-        console.log("Showing results for Heimdalsgate Like a Promethean Curse by of Montreal");
-    }
+function song() {
     spotify.search({
         type: "track",
         query: search,
         limit: 5
     }, function(err, data) {
+        if(!search) {
+            search = "heimdalsgate like a promethean curse";
+            console.log("Showing results for Heimdalsgate Like a Promethean Curse by of Montreal");
+        }
+        
         if(err) {
             console.log(`Oops, we encountered an error: ${err}`);
         } else {
@@ -91,7 +96,7 @@ function spotifyThisSong(search) {
 
 // TODO: Format printed movieData
 // 3. movie-this
-function movieThis() {
+function movie() {
     axios
         .get("http://www.omdbapi.com/?t=" + search + "&apikey=3bcc87a3")
         .then(function(response) {
